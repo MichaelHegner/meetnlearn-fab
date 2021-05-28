@@ -1,0 +1,96 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ch.hslu.oop.sw10_Event_Listener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+
+/**
+ *
+ * @author Fabienne
+ */
+public class Licht implements Switchable {
+
+    private int lumen = 0;
+    private int switchCount = 0;
+
+    
+     //Datenstruktur wo alle Listeners gespeichert werden
+    private final List<PropertyChangeListener> changeListeners = new ArrayList<>();
+
+    
+    
+    /**
+     * Alle Methoden welche im Interface sind, müssen hier implementiert werden.
+     */
+    public void switchOn() {
+        if (!this.isSwitchedOn()) {//Prüft zuerst ob licht nicht schon eingeschalten ist
+            this.switchCount++;
+        } 
+        final PropertyChangeEvent lichtEvent = new PropertyChangeEvent(this, "state", isSwitchedOff(), isSwitchedOn());
+        this.firePropertyChangeEvent(lichtEvent);
+
+        
+    }
+
+    //Licht ausmachen
+    public void switchOff() {
+        this.lumen = 0;
+         final PropertyChangeEvent lichtEvent = new PropertyChangeEvent(this, "state", isSwitchedOn(), isSwitchedOff());
+            this.firePropertyChangeEvent(lichtEvent);
+    }
+
+    //Abfrage ob Licht on ist
+    public boolean isSwitchedOn() {
+        if (this.lumen > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    //Abfrage ob licht off ist
+    public boolean isSwitchedOff() {
+        return !this.isSwitchedOn();
+    }
+
+    public long getSwitchCount() {
+        return this.switchCount;
+    }
+    
+    
+    
+    
+    
+    
+    
+     //Register eine PropertyChangeListener 
+    //lsitener = objekt das èbergeben werden soll, also Fahrzeug
+    //macht, dass die Eingabe nicht null sein kann
+    public void addPropertyChangeListener (final PropertyChangeListener listener){
+        if(!listener.equals(null)){
+            this.changeListeners.add(listener);
+        }
+    }
+    
+    //Unregister eine PropertyChangeListener
+     public void removePropertyChangeListener (final PropertyChangeListener listener){
+        if(!listener.equals(null)){
+            this.changeListeners.remove(listener);
+        }
+     }
+        
+        
+        //Informs all PropertyChangeListener èber die PropertyChangeEvent
+     //Wird in Array hinzugefügt, damit kein nullexception geworfen wird, wurde oben auf null verhindert.
+    private void firePropertyChangeEvent(final PropertyChangeEvent lichtEvent){
+        for(final PropertyChangeListener listener : this.changeListeners){
+            listener.propertyChange(lichtEvent);
+        }
+    }
+}

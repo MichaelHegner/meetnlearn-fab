@@ -1,0 +1,132 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ch.hslu.oop.sw10_Event_Listener;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Objects;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+//Es handelt sich um die Empfang-Seite
+/**
+ * Mit Switchable, weil das Auto ein und ausgeschalten werden kann. Mit
+ * PropertyChangeListener, weil
+ *
+ * @author Fabienne
+ */
+public class Fahrzeug implements Switchable, PropertyChangeListener {
+    //Instanzvariablen
+
+    private final Licht licht;
+    private final Motor motor;
+    private final String model;
+
+    //Neuer Logger erstellen
+    private static final Logger LOG = LogManager.getLogger(Fahrzeug.class);
+
+    /**
+     * Instanziert die verschiedenen Teile eines Autos.
+     * @param licht 
+     * @param motor
+     * @param model
+     */
+    public Fahrzeug( Licht licht, Motor motor, String model) {
+        // Instanziert Licht und Motor und sets name von model
+        licht = new Licht();
+        motor = new Motor();  //Motor  wird erzeugt
+        this.model = model;
+        this.motor = motor;
+        this.licht = licht;
+
+        //Fahrzeug als Listener registrieren
+        this.motor.addPropertyChangeListener(this); //this funktioniert weil, es auf sich selbst referenziert und als PropertyChangeListener fungiert und this ist Fahrzeug
+        this.licht.addPropertyChangeListener(this);
+
+    }
+
+   // Fahrzeug(String bmw) {
+   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   // }
+
+    //Holt den Namen des model
+    public String getmodel() {
+        return this.model;
+    }
+
+    /**
+     * Wenn aber gewisse teile ein/aus sind, ist dieser Zustand nicht definiert.
+     * das ist hier nicht der Fall, da ich die Teile entweder alle einschalte
+     * oder alle ausschalte Lösung bei boolean isSwitchOn: anstatt && macht man
+     * ein oder ||
+     */
+    @Override
+    /**
+     * Alle Methoden welche im Interface sind, müssen hier implementiert werden.
+     */
+    public void switchOn() {
+        licht.switchOn();
+        motor.switchOn();
+
+    }
+
+    @Override
+    public void switchOff() {
+        licht.switchOff();
+        motor.switchOff();
+    }
+
+    @Override
+    public boolean isSwitchedOn() //Alle sind engeschaltet somit auch das Auto 
+    {
+        return (motor.isSwitchedOn() || licht.isSwitchedOn());
+    }
+
+    @Override
+    public boolean isSwitchedOff()//Alle sind engeschaltet somit auch das Auto
+    {
+        return (motor.isSwitchedOff() && licht.isSwitchedOff());
+    }
+
+    public void getFahrzeugState() {
+        System.out.println("Motor:" + motor.isSwitchedOn());
+        System.out.println("Licht:" + licht.isSwitchedOn());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.model);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Fahrzeug)) {
+            return false;
+        }
+        Fahrzeug other = (Fahrzeug) obj;
+        return Objects.equals(this.model, other.model);
+    }
+
+    @Override
+    public String toString() {
+        return "Fahrzeug[model=" + this.model + ";isSwitchedOn=" + isSwitchedOn() + ";hash=" + this.hashCode();
+    }
+
+    @Override //Implementriere die Listener -Methode
+    public void propertyChange(final PropertyChangeEvent event) {
+        if (event.getSource() == this.motor) {
+            LOG.info("Motor Event:" + event);
+        }
+        if (event.getSource() == this.licht) {
+            LOG.info("Licht Event:" + event);
+        }
+    }
+
+}
