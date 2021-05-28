@@ -5,7 +5,7 @@ public class AutoStarter {
 	public static void main(String[] args) {
 		Auto auto = new Auto();
 		
-		auto.start();
+		auto.switchOn();
 		System.out.println(auto);
 
 		
@@ -15,7 +15,7 @@ public class AutoStarter {
 		auto.accelerate(); // overheating engine
 		
 		
-		auto.stop();
+		auto.switchOff();
 		System.out.println(auto);
 	}
 	

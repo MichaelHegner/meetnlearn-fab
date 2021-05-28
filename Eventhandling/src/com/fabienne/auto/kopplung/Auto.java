@@ -8,16 +8,16 @@ public class Auto {
 		this.motor = new Motor(this);
 	}
 	
-	public void start() {
-		motor.start();
+	public void switchOn() {
+		motor.switchOn();
 	}
 	
 	public void accelerate() {
 		motor.accelerate();
 	}
 	
-	public void stop() {
-		motor.stop();
+	public void switchOff() {
+		motor.switchOff();
 		
 	}
 	
