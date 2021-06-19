@@ -11,7 +11,7 @@ public class Motor {
 		this.auto = auto;
 	}
 	
-	void start() {
+	void switchOn() {
 		this.drehzahl = 1000;
 		changeState(MotorState.ON);
 	}
@@ -24,7 +24,7 @@ public class Motor {
 		}
 	}
 	
-	void stop() {
+	void switchOff() {
 		this.drehzahl = 0;
 		
 		if (!MotorState.DEFECT.equals(this.state)) {
