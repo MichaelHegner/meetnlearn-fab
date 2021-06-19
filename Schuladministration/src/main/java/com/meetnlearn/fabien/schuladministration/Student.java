@@ -73,6 +73,10 @@ public final class Student {
 	}
 	
 	public float getAverageMarks() {
+		 if (this.modules== null || this.modules.isEmpty()) {
+	            throw new IllegalStateException(".....");
+	     }
+		 
 		float sum = 0.0f;
 		
 		for (Modul modul : modules) {
